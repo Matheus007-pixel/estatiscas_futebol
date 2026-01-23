@@ -1,52 +1,95 @@
-#  Estatísticas de Futebol — Flask App
+#  Estatísticas de Futebol — Projeto Flask
 
-Aplicação web desenvolvida em **Python + Flask** para gerenciamento e visualização de estatísticas de times de futebol.
+Aplicação web desenvolvida em **Flask + SQLite** para cadastro e visualização de times de futebol, criada com foco em **portfólio profissional**.
 
-O projeto consome uma **API externa de futebol**, implementa **cache de dados**, **Dark Mode persistente** e possui uma interface moderna utilizando **Bootstrap** e **Font Awesome**.
+O projeto permite que o usuário cadastre clubes, adicione estatísticas básicas e faça upload do escudo do time diretamente pelo sistema, sem dependência de APIs externas.
+
+---
+
+##  Objetivo do Projeto
+
+- Criar uma aplicação estável e previsível
+- Evitar dependência de APIs externas instáveis
+- Demonstrar boas práticas com Flask
+- Simular um sistema real de cadastro de clientes/clubes
 
 ---
 
 ##  Funcionalidades
 
--  Cadastro, edição e exclusão de times
--  Busca automática de escudos via API externa
--  Cache de escudos no banco de dados (SQLite)
--  Dark Mode persistente (localStorage)
--  Visualização de estatísticas por time
--  Interface moderna e responsiva
-- Uso de variáveis de ambiente para segurança da API
+- Cadastro de times
+- Edição e exclusão
+- Upload de escudo (imagem PNG/JPG)
+- Validação de tamanho da imagem (até 2MB)
+- Página individual para cada time
+- Interface responsiva com Bootstrap
+- Dark Mode persistente
 
 ---
 
-## Tecnologias Utilizadas
+##  Decisões Técnicas
 
-- Python
-- Flask
-- SQLite
-- HTML5 / CSS3
-- Bootstrap 5
-- Font Awesome
-- JavaScript
-- API-Football
-- Gunicorn
+- APIs externas removidas (ex: API-Football)
+- Upload local de imagens feito pelo usuário
+- Escudo salvo no servidor e referenciado no banco
+- Banco SQLite para simplicidade 
+- Arquivos sensíveis ignorados via `.gitignore`
+
+> *“Optei por não utilizar APIs externas para evitar instabilidade e garantir que o projeto funcione de forma previsível em produção.”*
 
 ---
 
-## Estrutura do Projeto
+##  Estrutura do Projeto
 
-```text
-estatisticas-futebol-flask/
+estatiscas_futebol/
+│
 ├── app.py
-├── services/
-│   ├── football_api.py
-│   └── escudo_service.py
-├── static/
-│   └── style.css
-├── templates/
-│   ├── index.html
-│   ├── time.html
-│   ├── cadastrar.html
-│   └── editar.html
 ├── requirements.txt
-├── README.md
-└── database.db
+├── services/
+│ └── escudos.py
+│
+├── static/
+│ ├── escudos/
+│ │ └── default.png
+│ └── uploads/
+│
+├── templates/
+│ ├── index.html
+│ ├── cadastrar.html
+│ ├── editar.html
+│ └── time.html
+│
+└── database.db (ignorado no Git)
+
+
+---
+
+##  Banco de Dados
+
+Tabela `times`:
+
+- `id`
+- `nome`
+- `jogos`
+- `gols`
+- `escudo`
+
+
+---
+
+##  Upload de Escudos
+
+- Formatos permitidos: PNG, JPG, JPEG
+- Tamanho máximo: 2MB
+- Imagens são salvas localmente
+- Caso não seja enviado, usa imagem padrão
+
+---
+
+## Como Executar Localmente
+
+```bash
+git clone https://github.com/seu-usuario/seu-repositorio.git
+cd estatiscas_futebol
+pip install -r requirements.txt
+python app.py
