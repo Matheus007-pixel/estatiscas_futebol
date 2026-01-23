@@ -20,13 +20,12 @@
 
     <div class="card p-4 mx-auto" style="max-width: 600px;">
 
-        <!-- Título -->
         <h2 class="mb-4 text-center">
             <i class="fa-solid fa-plus-circle"></i> Cadastrar Time
         </h2>
 
-        <!-- Formulário -->
-        <form method="POST">
+        <!-- 🔥 FORM COM SUPORTE A UPLOAD -->
+        <form method="POST" enctype="multipart/form-data">
 
             <!-- Nome -->
             <div class="mb-3">
@@ -36,7 +35,7 @@
                 <input type="text"
                        name="nome"
                        class="form-control"
-                       placeholder="Ex: Flamengo"
+                       placeholder="Ex: Real Madrid"
                        required>
             </div>
 
@@ -53,7 +52,7 @@
             </div>
 
             <!-- Gols -->
-            <div class="mb-4">
+            <div class="mb-3">
                 <label class="form-label">
                     <i class="fa-solid fa-futbol"></i> Gols
                 </label>
@@ -62,6 +61,21 @@
                        class="form-control"
                        placeholder="Ex: 45"
                        required>
+            </div>
+
+            <!-- ✅ ESCUDO (UPLOAD DE IMAGEM) -->
+            <div class="mb-4">
+                <label class="form-label">
+                    <i class="fa-solid fa-image"></i> Escudo do Time (PNG ou JPG)
+                </label>
+                <input type="file"
+                       name="escudo"
+                       class="form-control"
+                       accept=".png,.jpg,.jpeg"
+                       required>
+                <div class="form-text">
+                    Selecione uma imagem do escudo do time no seu computador.
+                </div>
             </div>
 
             <!-- Botões -->
@@ -81,7 +95,7 @@
 
 </div>
 
-<!-- Dark Mode Script -->
+<!-- 🌙 DARK MODE SCRIPT (MANTIDO) -->
 <script>
 function toggleDarkMode() {
     document.body.classList.toggle("dark");
@@ -97,6 +111,27 @@ if (localStorage.getItem("theme") === "dark") {
     document.body.classList.add("dark");
 }
 </script>
+
+<script>
+const fileInput = document.querySelector('input[type="file"]');
+
+if (fileInput) {
+    fileInput.addEventListener('change', function () {
+        const file = this.files[0];
+
+        if (!file) return;
+
+        const maxSizeMB = 2;
+        const maxSizeBytes = maxSizeMB * 1024 * 1024;
+
+        if (file.size > maxSizeBytes) {
+            alert("A imagem deve ter no máximo 2 MB.");
+            this.value = ""; // limpa o campo
+        }
+    });
+}
+</script>
+
 
 </body>
 </html>

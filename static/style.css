@@ -165,3 +165,23 @@ body.dark .form-control:focus {
     border-color: #90caf9;
     box-shadow: none;
 }
+/* ===== INPUT FILE - DARK MODE ===== */
+body.dark input[type="file"] {
+    background-color: #212529;
+    color: #ffffff;
+    border: 1px solid #495057;
+}
+
+body.dark input[type="file"]::file-selector-button {
+    background-color: #198754; /* verde Bootstrap */
+    color: #ffffff;
+    border: none;
+}
+
+body.dark input[type="file"]::file-selector-button:hover {
+    background-color: #157347;
+}
+
+body.dark .form-text {
+    color: #ced4da !important; /* cinza claro */
+}

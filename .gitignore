@@ -1,3 +1,12 @@
-venv/
-.env
+# IDE
+.idea/
 
+# Banco local
+database.db
+
+# Uploads do usuário
+static/uploads/
+
+# Cache Python
+__pycache__/
+*.pyc
