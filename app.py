@@ -1,22 +1,12 @@
 import sqlite3
 import os
-from flask import Flask, render_template, request, redirect, url_for
-from dotenv import load_dotenv
-from services.football_api import FootballAPI
-
-
-
-
-# =====================
-# Configurações iniciais
-# =====================
-load_dotenv()
-
-API_KEY = os.getenv("API_FOOTBALL_KEY")
-
-football_api = FootballAPI(API_KEY)
+from flask import Flask, render_template, request, redirect, url_for, flash
+from services.escudos import salvar_escudo
 
 app = Flask(__name__)
+app.secret_key ="chave-secreta"
+
+app.config['MAX_CONTENT_LENGTH'] = 2 * 1024 * 1024 # 2 MB
 
 # =====================
 # Banco de dados
@@ -25,26 +15,6 @@ def get_db_connection():
     conn = sqlite3.connect("database.db")
     conn.row_factory = sqlite3.Row
     return conn
-
-def obter_escudo_com_cache(nome_time):
-        conn = get_db_connection()
-
-        # 1️⃣ Verifica se já existe escudo no banco
-        row = conn.execute(
-            "SELECT escudo FROM times WHERE nome = ?",
-            (nome_time,)
-        ).fetchone()
-
-        if row and row["escudo"]:
-            conn.close()
-            return row["escudo"]  # 🔥 CACHE HIT
-
-        conn.close()
-
-        # 2️⃣ Se não existir, busca na API
-        escudo_api = football_api.buscar_escudo_time(nome_time)
-
-        return escudo_api
 
 # =====================
 # Rotas
@@ -66,9 +36,23 @@ def cadastrar():
         jogos = request.form["jogos"]
         gols = request.form["gols"]
 
-        # 🔥 BUSCA AUTOMÁTICA DO ESCUDO
-        escudo = obter_escudo_com_cache(nome)
+        arquivo = request.files.get("escudo")
+        escudo = salvar_escudo(arquivo, nome)
+        if arquivo and arquivo.filename != "":
+            if arquivo.mimetype not in ["image/png", "image/jpeg"]:
+                flash(" Formato inválido. Envie uma imagem PNG ou JPG.")
+                return redirect(url_for("cadastrar"))
 
+            arquivo.seek(0, os.SEEK_END)
+            tamanho = arquivo.tell()
+            arquivo.seek(0)
+
+            if tamanho > 2 * 1024 * 1024:
+                flash(" A imagem deve ter no máximo 2 MB.")
+                return redirect(url_for("cadastrar"))
+
+        if not escudo:
+            escudo = "/static/escudos/default.png"
 
         conn = get_db_connection()
         conn.execute(
@@ -82,17 +66,26 @@ def cadastrar():
 
     return render_template("cadastrar.html")
 
-
-
 # =====================
 # Excluir Time
 # =====================
 @app.route("/excluir/<int:id>")
 def excluir(id):
     conn = get_db_connection()
+
+    time = conn.execute(
+        "SELECT escudo FROM times WHERE id = ?", (id,)
+    ).fetchone()
+
+    if time and time["escudo"] and "uploads/escudos" in time["escudo"]:
+        caminho = time["escudo"].lstrip("/")
+        if os.path.exists(caminho):
+            os.remove(caminho)
+
     conn.execute("DELETE FROM times WHERE id = ?", (id,))
     conn.commit()
     conn.close()
+
     return redirect(url_for("home"))
 
 # =====================
@@ -140,4 +133,5 @@ def time(id):
 # Run
 # =====================
 if __name__ == "__main__":
-    app.run()
+
+    app.run(debug=True)
