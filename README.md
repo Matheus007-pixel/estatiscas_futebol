@@ -89,7 +89,7 @@ Tabela `times`:
 ## Como Executar Localmente
 
 ```bash
-git clone https://github.com/seu-usuario/seu-repositorio.git
+git clone https://github.com/Matheus007-pixel/estatiscas_futebol
 cd estatiscas_futebol
 pip install -r requirements.txt
 python app.py
