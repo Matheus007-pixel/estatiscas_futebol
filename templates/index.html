@@ -41,39 +41,51 @@
 
 
     <!-- Cards -->
-    <div class="row">
+<div class="row">
+
+    {% if times|length == 0 %}
+        <div class="col-12">
+            <div class="card p-5 text-center">
+                <h4 class="mb-3">
+                    <i class="fa-solid fa-circle-info"></i>
+                    Nenhum time cadastrado
+                </h4>
+                <p class="text-muted mb-4">
+                    Comece cadastrando o primeiro time para visualizar as estatísticas.
+                </p>
+                <a href="{{ url_for('cadastrar') }}" class="btn btn-success">
+                    <i class="fa-solid fa-plus"></i> Cadastrar primeiro time
+                </a>
+            </div>
+        </div>
+    {% else %}
+
         {% for time in times %}
         <div class="col-md-4 mb-4">
             <div class="card p-3 text-center">
 
                 <!-- Escudo -->
-               <div class="d-flex justify-content-center align-items-center mb-3"
-     style="height: 140px;">
-   <img src="{{ time['escudo'] }}"
-     alt="Escudo {{ time['nome'] }}"
-     style="max-height: 120px; max-width: 120px; object-fit: contain;">
-
-
-</div>
-
-
+                <div class="d-flex justify-content-center align-items-center mb-3"
+                     style="height: 140px;">
+                    <img src="{{ time['escudo'] }}"
+                         alt="Escudo {{ time['nome'] }}"
+                         style="max-height: 120px; max-width: 120px; object-fit: contain;">
+                </div>
 
                 <!-- Nome -->
-               <a href="{{ url_for('time', id=time['id']) }}" class="nome-time">
-    <i class="fa-solid fa-shield-halved"></i> {{ time['nome'] }}
-</a>
-
+                <a href="{{ url_for('time', id=time['id']) }}" class="nome-time">
+                    <i class="fa-solid fa-shield-halved"></i> {{ time['nome'] }}
+                </a>
 
                 <!-- Estatísticas -->
-                <div class="stats">
-                   <span class="badge bg-secondary">
-    <i class="fa-solid fa-calendar-days"></i> Jogos: {{ time['jogos'] }}
-</span>
+                <div class="stats mt-2">
+                    <span class="badge bg-secondary">
+                        <i class="fa-solid fa-calendar-days"></i> Jogos: {{ time['jogos'] }}
+                    </span>
 
-<span class="badge bg-success">
-    <i class="fa-solid fa-futbol"></i> Gols: {{ time['gols'] }}
-</span>
-
+                    <span class="badge bg-success">
+                        <i class="fa-solid fa-futbol"></i> Gols: {{ time['gols'] }}
+                    </span>
                 </div>
 
                 <!-- Botões -->
@@ -93,7 +105,11 @@
             </div>
         </div>
         {% endfor %}
-    </div>
+
+    {% endif %}
+
+</div>
+
 
 </div>
 <script>
